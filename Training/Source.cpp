@@ -6,7 +6,8 @@
 
 using namespace std;
 
-
+// Generate random int array consists of the N elements
+// init - initialize number for random generator
 vector<int> randGen(size_t N, size_t init = 123456) {
 	vector<int> res;
 	srand(init);
@@ -16,6 +17,7 @@ vector<int> randGen(size_t N, size_t init = 123456) {
 	return res;
 }
 
+// The function prints data to console, with prefix 'pref'
 void printVect(vector<int> const& data, string pref = "") {
 	cout << pref << endl;
 	cout << "Data print. Size: " << data.size() << endl;
@@ -25,6 +27,7 @@ void printVect(vector<int> const& data, string pref = "") {
 	cout << "\nEnd print.\n";
 }
 
+// Returns true if data is sorted, and false otherwise
 bool is_sorted(vector<int> const& data) {
 	for (auto it0 = data.begin(), it1 = data.begin() + 1; it1 < data.end(); it0++, it1++) {
 		if (*it0 > *it1)
@@ -33,7 +36,9 @@ bool is_sorted(vector<int> const& data) {
 	return true;
 }
 
-vector<int> getOn(size_t beg, size_t N, size_t step, size_t init=10) {
+// Calculates execution time of the sort algorithm. 
+// beg - initial array size, N - steps number, step - increment array size step
+vector<int> getTimes(size_t beg, size_t N, size_t step, size_t init=10) {
 	vector<int> res;
 	for (size_t i = 0; i < N; ++i) {
 
@@ -62,7 +67,7 @@ vector<int> getOn(size_t beg, size_t N, size_t step, size_t init=10) {
 }
 
 int main() {
-	auto times = getOn(10000, 45, 2000);
+	auto times = getTimes(10000, 45, 2000);
 	cout << "Ok!\nTime table:\n";
 	for (int i = 0; i < times.size(); i++) {
 		printf("(%d;%d) ", i, times.at(i));
