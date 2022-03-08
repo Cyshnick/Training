@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <chrono>
+#include <functional>
 
 using namespace std;
 
@@ -38,7 +39,7 @@ bool is_sorted(vector<int> const& data) {
 
 // Calculates execution time of the sort algorithm. 
 // beg - initial array size, N - steps number, step - increment array size step
-vector<int> getTimes(size_t beg, size_t N, size_t step, size_t init=10) {
+vector<int> getTimes(size_t beg, size_t N, size_t step, std::function<void(int*,int*)> sort, size_t init=10) {
 	vector<int> res;
 	for (size_t i = 0; i < N; ++i) {
 
@@ -49,10 +50,10 @@ vector<int> getTimes(size_t beg, size_t N, size_t step, size_t init=10) {
 		auto data_src = vector<int>(data);
 		auto begTime = chrono::steady_clock::now();
 
-		SortAlg::merge_sort(data.begin()._Ptr, data.end()._Ptr);
+		sort(data.begin()._Ptr, data.end()._Ptr);
 
 		auto endTime = chrono::steady_clock::now();
-		auto elapsTime = chrono::duration_cast<chrono::microseconds>(endTime - begTime);
+		auto elapsTime = chrono::duration_cast<chrono::milliseconds>(endTime - begTime);
 		res.push_back(elapsTime.count());
 
 		if (!is_sorted(data)) {
@@ -67,15 +68,15 @@ vector<int> getTimes(size_t beg, size_t N, size_t step, size_t init=10) {
 }
 
 int main() {
-	auto times = getTimes(10000, 45, 2000);
+	auto times = getTimes(10000, 45, 2000, [](int* a, int* b) { SortAlg::heap_sort(a, b); });
 	cout << "Ok!\nTime table:\n";
 	for (int i = 0; i < times.size(); i++) {
 		printf("(%d;%d) ", i, times.at(i));
 	}
 
-	//int a[] = { 13, 3, 8, 1, 15, 2, 3, 7, 4};
 
-	//SortAlg::merge_sort(a, a + 9);
+	//int a[] = { 13, 3, 8, 1, 15, 2, 3, 7, 4};
+	//SortAlg::heap_sort(a, a + 9);
 
 	return 0;
 }

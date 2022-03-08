@@ -1,11 +1,14 @@
 #pragma once
 #include <vector>
+#include <algorithm>
+#include <iostream>
 
 
 class SortAlg {
 public:
 
 	// Bubble sort sucks!
+	// Merge sort - the best here. It's need to optimize heap sort.
 
 	template <class T>
 	static void bubble_sort(T* begin, T* end) {
@@ -29,6 +32,12 @@ public:
 			}
 		}
 		delete [] buffer;
+	}
+
+	template <class T>
+	static void heap_sort(T* begin, T* end) {
+		Heap_p<T> heap(begin, end - begin);
+		heap.sort();
 	}
 
 private:
@@ -69,5 +78,52 @@ private:
 	static T min(T a, T b) {
 		return a < b ? a : b;
 	}
+	
+	// The heap don't allocate own memory! Only pointers
+	template <class T>
+	class Heap_p {
+	public:
+		Heap_p(T* a, size_t N) : a(a), N(N) {
+			for (size_t i = N / 2; i != 0; i--) {
+				size_t cur_i = i - 1;
+				sift(cur_i, N);
+			}
+		}
+
+		void sort() {
+			for (size_t i = N-1; i > 0; i--) {
+				std::swap(a[i], a[0]);
+				sift(0, i);
+			}
+		}
+
+	private:
+
+		void sift(size_t cur_i, size_t size) {
+
+			bool loop_out = true;
+			while (loop_out) {
+				size_t me_i;
+				if (cur_i * 2 + 2 < size)
+					me_i = a[cur_i * 2 + 1] > a[cur_i * 2 + 2] ? 2 * cur_i + 1 : 2 * cur_i + 2;
+				else if (cur_i * 2 + 2 == size)
+					me_i = cur_i * 2 + 1;
+				else
+					break;
+				if (a[me_i] > a[cur_i]) {
+					std::swap(a[me_i], a[cur_i]);
+					cur_i = me_i;
+				}
+				else {
+					loop_out = false;
+				}
+			}
+		}
+
+		T* a;
+		size_t N;
+
+	};
+
 };
 
